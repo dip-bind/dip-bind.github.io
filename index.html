@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Consegna DDT · BiND</title>
+  <style>
+    :root{--bg:#081321;--panel:#12233f;--line:rgba(174,203,236,.22);--ink:#eef6ff;--muted:#a9b9cd;--blue:#2f8be8;--green:#35b66f;--red:#ef6c75}
+    *{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;color:var(--ink);background:radial-gradient(circle at 20% 0%,rgba(47,139,232,.25),transparent 38%),linear-gradient(145deg,#0a1a2e,#050b13);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px}
+    .shell{position:relative;width:min(620px,100%);overflow:hidden;padding:30px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(29,50,84,.97),rgba(12,25,46,.99));box-shadow:0 30px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.09)}
+    .seal{position:absolute;right:-65px;bottom:-70px;width:280px;height:280px;border:12px double rgba(97,156,216,.07);border-radius:50%;pointer-events:none}.seal:after{content:"BiND";position:absolute;inset:0;display:grid;place-items:center;color:rgba(97,156,216,.08);font:700 52px Georgia,serif}
+    .eyebrow{color:#77b9fb;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{margin:7px 0 9px;font-size:30px;font-weight:500}p{margin:0;color:var(--muted);line-height:1.55}.summary{margin:22px 0;padding:16px;border:1px solid var(--line);border-radius:13px;background:rgba(4,12,25,.35)}.summary strong,.summary span{display:block}.summary span{margin-top:5px;color:var(--muted);font-size:14px}
+    label{display:block;margin-top:16px;color:#cad9eb;font-size:14px;font-weight:700}input[type=file],textarea{width:100%;margin-top:7px;padding:12px;color:var(--ink);background:#0b172a;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:100px;resize:vertical}.choice{display:flex;gap:10px;align-items:flex-start;padding:14px;margin-top:11px;border:1px solid var(--line);border-radius:12px;background:rgba(7,19,36,.58);cursor:pointer}.choice:has(input:checked){border-color:#4fa3f3;box-shadow:0 0 0 2px rgba(47,139,232,.16)}.choice input{margin-top:3px}.choice span{font-weight:600;line-height:1.45}.confirm{display:flex;gap:10px;align-items:flex-start}.confirm input{margin-top:3px}
+    button{width:100%;margin-top:19px;padding:13px;border:1px solid rgba(103,213,150,.45);border-radius:11px;color:white;background:linear-gradient(180deg,#34b96f,#258c55);box-shadow:0 10px 22px rgba(25,121,70,.24);font-weight:800;font-size:15px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.message{margin-top:17px;padding:12px;border-radius:10px;background:rgba(47,139,232,.12);color:#cfe7ff;line-height:1.5}.message.error{background:rgba(239,108,117,.12);color:#ffd3d6}.message.success{background:rgba(53,182,111,.13);color:#c9f5dc}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="seal" aria-hidden="true"></div>
+    <div class="eyebrow">Università degli Studi di Palermo · Dipartimento BiND</div>
+    <h1>Completa la procedura</h1>
+    <p>Scegli l’adempimento relativo alla procedura indicata. Il collegamento è personale, temporaneo e utilizzabile una sola volta.</p>
+    <section id="summary" class="summary"><strong>Verifica del collegamento…</strong></section>
+    <form id="form" hidden>
+      <label class="choice"><input type="radio" name="completionType" value="PRODOTTO" checked><span>Carica DDT e conferma corretto funzionamento del prodotto</span></label>
+      <label class="choice"><input type="radio" name="completionType" value="SERVIZIO"><span>Conferma espletamento/attivazione servizio</span></label>
+      <label id="fileBlock">Documento DDT
+        <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx">
+      </label>
+      <label class="confirm"><input id="confirmed" type="checkbox"><span id="confirmationLabel">Confermo la ricezione e il corretto funzionamento del prodotto.</span></label>
+      <label>Nota libera
+        <textarea id="note" placeholder="Eventuali informazioni aggiuntive"></textarea>
+      </label>
+      <button id="submit" type="submit">Registra adempimento</button>
+    </form>
+    <div id="message" class="message" hidden></div>
+  </main>
+  <script>
+    (()=>{
+      // Motore del servizio: la web app Apps Script del Gestionale DDT BiND (doPost).
+      const SERVICE_URL='https://script.google.com/macros/s/AKfycbz2cA-oDDs0FfdR8_7je2kjKfo0Hp48Ke8kyzY2hXooGKbBjvKk_MTyA3a7ACu_bCqBxQ/exec';
+      const params=new URLSearchParams(location.search);
+      const token=String(params.get('c')||params.get('upload')||'').trim();
+      const summary=document.querySelector('#summary'),form=document.querySelector('#form'),message=document.querySelector('#message'),button=document.querySelector('#submit'),fileBlock=document.querySelector('#fileBlock'),confirmationLabel=document.querySelector('#confirmationLabel');
+      const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const show=(text,type='')=>{message.textContent=text;message.className='message '+type;message.hidden=false};
+      // Corpo text/plain: richiesta "semplice", nessun preflight CORS e nessun cookie Google inviato.
+      async function server(action,payload){
+        let response;
+        try{response=await fetch(SERVICE_URL,{method:'POST',body:JSON.stringify({action,...payload}),redirect:'follow',credentials:'omit'})}
+        catch(error){throw new Error('Impossibile contattare il servizio. Controlla la connessione e riprova.')}
+        let result;
+        try{result=await response.json()}catch(error){throw new Error('Risposta del servizio non valida. Riprova tra qualche minuto.')}
+        if(!result||!result.ok)throw new Error(result&&result.error||'Operazione non riuscita.');
+        return result.data;
+      }
+      const asPayload=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('Impossibile leggere il file.'));reader.onload=()=>resolve({name:file.name,mimeType:file.type||'application/octet-stream',base64:String(reader.result||'').split(',').pop()||''});reader.readAsDataURL(file)});
+      function updateChoice(){const type=document.querySelector('input[name="completionType"]:checked')?.value||'PRODOTTO';fileBlock.hidden=type==='SERVIZIO';confirmationLabel.textContent=type==='PRODOTTO'?'Confermo la ricezione e il corretto funzionamento del prodotto.':'Confermo l’avvenuto espletamento/attivazione del servizio.'}
+      async function start(){
+        if(!token){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show('Il collegamento è incompleto: aprilo direttamente dall’email ricevuta.','error');return}
+        try{
+          const data=await server('getUploadPageData',{token});
+          summary.innerHTML=`<strong>RDO ${esc(data.rdo||'—')} · CIG ${esc(data.cig||'—')}</strong><span>${esc(data.subject||'Fornitura/servizio')}${data.supplier?' · '+esc(data.supplier):''}</span>`;
+          if(data.delivered){show('L’adempimento risulta già registrato.','success');return}
+          form.hidden=false;updateChoice();
+        }catch(error){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show(error.message,'error')}
+      }
+      document.querySelectorAll('input[name="completionType"]').forEach(input=>input.addEventListener('change',updateChoice));
+      form.addEventListener('submit',async event=>{
+        event.preventDefault();
+        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',file=document.querySelector('#file').files[0],confirmed=document.querySelector('#confirmed').checked;
+        if(completionType==='PRODOTTO'&&!file){show('Per il prodotto è necessario selezionare il file DDT.','error');return}
+        if(!confirmed){show('Spunta la conferma prima di procedere.','error');return}
+        button.disabled=true;button.textContent='Registrazione in corso…';
+        try{
+          await server('uploadDdtFromLink',{token,completionType,confirmed:true,file:file?await asPayload(file):null,note:document.querySelector('#note').value.trim()});
+          form.hidden=true;
+          show(completionType==='PRODOTTO'?'DDT ricevuto e corretto funzionamento confermato. I promemoria sono stati sospesi.':'Espletamento/attivazione del servizio confermato. I promemoria sono stati sospesi.','success');
+        }catch(error){show(error.message,'error');button.disabled=false;button.textContent='Registra adempimento'}
+      });
+      start();
+    })();
+  </script>
+</body>
+</html>
