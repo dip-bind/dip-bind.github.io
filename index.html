@@ -14,6 +14,7 @@
     .eyebrow{color:#77b9fb;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{margin:7px 0 9px;font-size:30px;font-weight:500}p{margin:0;color:var(--muted);line-height:1.55}.summary{margin:22px 0;padding:16px;border:1px solid var(--line);border-radius:13px;background:rgba(4,12,25,.35)}.summary strong,.summary span{display:block}.summary span{margin-top:5px;color:var(--muted);font-size:14px}
     label{display:block;margin-top:16px;color:#cad9eb;font-size:14px;font-weight:700}input[type=file],textarea{width:100%;margin-top:7px;padding:12px;color:var(--ink);background:#0b172a;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:100px;resize:vertical}.choice{display:flex;gap:10px;align-items:flex-start;padding:14px;margin-top:11px;border:1px solid var(--line);border-radius:12px;background:rgba(7,19,36,.58);cursor:pointer}.choice:has(input:checked){border-color:#4fa3f3;box-shadow:0 0 0 2px rgba(47,139,232,.16)}.choice input{margin-top:3px}.choice span{font-weight:600;line-height:1.45}.confirm{display:flex;gap:10px;align-items:flex-start}.confirm input{margin-top:3px}
     button{width:100%;margin-top:19px;padding:13px;border:1px solid rgba(103,213,150,.45);border-radius:11px;color:white;background:linear-gradient(180deg,#34b96f,#258c55);box-shadow:0 10px 22px rgba(25,121,70,.24);font-weight:800;font-size:15px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.message{margin-top:17px;padding:12px;border-radius:10px;background:rgba(47,139,232,.12);color:#cfe7ff;line-height:1.5}.message.error{background:rgba(239,108,117,.12);color:#ffd3d6}.message.success{background:rgba(53,182,111,.13);color:#c9f5dc}
+    .file-block{margin-top:16px}.file-label{display:block;color:#cad9eb;font-size:14px;font-weight:700}.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.pick-btn{display:flex;align-items:center;justify-content:center;margin:0;padding:13px;border:1px solid #4fa3f3;border-radius:10px;background:rgba(47,139,232,.14);color:#eef6ff;font-size:15px;font-weight:700;cursor:pointer}.pick-btn:hover{background:rgba(47,139,232,.24)}.file-name{display:block;margin-top:8px;color:var(--muted);font-size:13px;word-break:break-all}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -27,9 +28,15 @@
     <form id="form" hidden>
       <label class="choice"><input type="radio" name="completionType" value="PRODOTTO" checked><span>Carica DDT e conferma corretto funzionamento del prodotto</span></label>
       <label class="choice"><input type="radio" name="completionType" value="SERVIZIO"><span>Conferma espletamento/attivazione servizio</span></label>
-      <label id="fileBlock">Documento DDT
-        <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx">
-      </label>
+      <div id="fileBlock" class="file-block"><span class="file-label">Documento DDT</span>
+        <div class="pick">
+          <label class="pick-btn" for="camera">Scatta foto</label>
+          <label class="pick-btn" for="file">Sfoglia</label>
+        </div>
+        <input id="camera" type="file" accept="image/*" capture="environment" hidden>
+        <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx" hidden>
+        <span id="fileName" class="file-name">Nessun file selezionato</span>
+      </div>
       <label class="confirm"><input id="confirmed" type="checkbox"><span id="confirmationLabel">Confermo la ricezione e il corretto funzionamento del prodotto.</span></label>
       <label>Nota libera
         <textarea id="note" placeholder="Eventuali informazioni aggiuntive"></textarea>
@@ -47,6 +54,8 @@
       const summary=document.querySelector('#summary'),form=document.querySelector('#form'),message=document.querySelector('#message'),button=document.querySelector('#submit'),fileBlock=document.querySelector('#fileBlock'),confirmationLabel=document.querySelector('#confirmationLabel');
       const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
       const show=(text,type='')=>{message.textContent=text;message.className='message '+type;message.hidden=false};
+      let chosenFile=null;const fileName=document.querySelector('#fileName');
+      ['#camera','#file'].forEach(sel=>document.querySelector(sel).addEventListener('change',event=>{const f=event.target.files[0];if(!f)return;chosenFile=f;fileName.textContent=f.name+' · '+Math.max(1,Math.round(f.size/1024))+' KB';event.target.value=''}));
       // Corpo text/plain: richiesta "semplice", nessun preflight CORS e nessun cookie Google inviato.
       async function server(action,payload){
         let response;
@@ -71,7 +80,7 @@
       document.querySelectorAll('input[name="completionType"]').forEach(input=>input.addEventListener('change',updateChoice));
       form.addEventListener('submit',async event=>{
         event.preventDefault();
-        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',file=document.querySelector('#file').files[0],confirmed=document.querySelector('#confirmed').checked;
+        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',file=chosenFile,confirmed=document.querySelector('#confirmed').checked;
         if(completionType==='PRODOTTO'&&!file){show('Per il prodotto è necessario selezionare il file DDT.','error');return}
         if(!confirmed){show('Spunta la conferma prima di procedere.','error');return}
         button.disabled=true;button.textContent='Registrazione in corso…';
