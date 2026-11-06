@@ -15,6 +15,7 @@
     label{display:block;margin-top:16px;color:#cad9eb;font-size:14px;font-weight:700}input[type=file],textarea{width:100%;margin-top:7px;padding:12px;color:var(--ink);background:#0b172a;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:100px;resize:vertical}.choice{display:flex;gap:10px;align-items:flex-start;padding:14px;margin-top:11px;border:1px solid var(--line);border-radius:12px;background:rgba(7,19,36,.58);cursor:pointer}.choice:has(input:checked){border-color:#4fa3f3;box-shadow:0 0 0 2px rgba(47,139,232,.16)}.choice input{margin-top:3px}.choice span{font-weight:600;line-height:1.45}.confirm{display:flex;gap:10px;align-items:flex-start}.confirm input{margin-top:3px}
     button{width:100%;margin-top:19px;padding:13px;border:1px solid rgba(103,213,150,.45);border-radius:11px;color:white;background:linear-gradient(180deg,#34b96f,#258c55);box-shadow:0 10px 22px rgba(25,121,70,.24);font-weight:800;font-size:15px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.message{margin-top:17px;padding:12px;border-radius:10px;background:rgba(47,139,232,.12);color:#cfe7ff;line-height:1.5}.message.error{background:rgba(239,108,117,.12);color:#ffd3d6}.message.success{background:rgba(53,182,111,.13);color:#c9f5dc}
     .file-block{margin-top:16px}.file-label{display:block;color:#cad9eb;font-size:14px;font-weight:700}.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.pick-btn{display:flex;align-items:center;justify-content:center;margin:0;padding:13px;border:1px solid #4fa3f3;border-radius:10px;background:rgba(47,139,232,.14);color:#eef6ff;font-size:15px;font-weight:700;cursor:pointer}.pick-btn:hover{background:rgba(47,139,232,.24)}.file-name{display:block;margin-top:8px;color:var(--muted);font-size:13px;word-break:break-all}
+    .file-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.file-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:#cad9eb}.file-list li.empty{border:0;padding:0;color:var(--muted)}.file-list span{min-width:0;overflow-wrap:anywhere}.remove-file{width:auto;margin:0;padding:6px 10px;border:1px solid rgba(239,108,117,.5);border-radius:8px;background:rgba(239,108,117,.12);box-shadow:none;font-size:12px;color:#ffd3d6}.confirm.partial{color:#ffbf7a}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -34,10 +35,11 @@
           <label class="pick-btn" for="file">Sfoglia</label>
         </div>
         <input id="camera" type="file" accept="image/*" capture="environment" hidden>
-        <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx" hidden>
-        <span id="fileName" class="file-name">Nessun file selezionato</span>
+        <input id="file" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx" hidden>
+        <ul id="fileList" class="file-list"><li class="empty">Nessun file selezionato</li></ul>
       </div>
-      <label class="confirm"><input id="confirmed" type="checkbox"><span id="confirmationLabel">Confermo la ricezione e il corretto funzionamento del prodotto.</span></label>
+      <label class="confirm partial" id="partialBlock"><input id="partial" type="checkbox"><span>La fornitura è incompleta: questo DDT è parziale</span></label>
+      <label class="confirm"><input id="confirmed" type="checkbox"><span id="confirmationLabel">Confermo il corretto funzionamento del prodotto.</span></label>
       <label>Nota libera
         <textarea id="note" placeholder="Eventuali informazioni aggiuntive"></textarea>
       </label>
@@ -54,8 +56,10 @@
       const summary=document.querySelector('#summary'),form=document.querySelector('#form'),message=document.querySelector('#message'),button=document.querySelector('#submit'),fileBlock=document.querySelector('#fileBlock'),confirmationLabel=document.querySelector('#confirmationLabel');
       const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
       const show=(text,type='')=>{message.textContent=text;message.className='message '+type;message.hidden=false};
-      let chosenFile=null;const fileName=document.querySelector('#fileName');
-      ['#camera','#file'].forEach(sel=>document.querySelector(sel).addEventListener('change',event=>{const f=event.target.files[0];if(!f)return;chosenFile=f;fileName.textContent=f.name+' · '+Math.max(1,Math.round(f.size/1024))+' KB';event.target.value=''}));
+      let chosenFiles=[];const fileList=document.querySelector('#fileList'),partialBox=document.querySelector('#partial'),partialBlock=document.querySelector('#partialBlock');
+      const renderFiles=()=>{fileList.innerHTML=chosenFiles.length?chosenFiles.map((f,i)=>`<li><span>${esc(f.name)} · ${Math.max(1,Math.round(f.size/1024))} KB</span><button type="button" class="remove-file" data-index="${i}">Togli</button></li>`).join(''):'<li class="empty">Nessun file selezionato</li>'};
+      fileList.addEventListener('click',event=>{const b=event.target.closest('.remove-file');if(!b)return;chosenFiles.splice(Number(b.dataset.index),1);renderFiles()});
+      ['#camera','#file'].forEach(sel=>document.querySelector(sel).addEventListener('change',event=>{chosenFiles=chosenFiles.concat([...event.target.files]).slice(0,10);event.target.value='';renderFiles()}));
       // Corpo text/plain: richiesta "semplice", nessun preflight CORS e nessun cookie Google inviato.
       async function server(action,payload){
         let response;
@@ -67,25 +71,33 @@
         return result.data;
       }
       const asPayload=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('Impossibile leggere il file.'));reader.onload=()=>resolve({name:file.name,mimeType:file.type||'application/octet-stream',base64:String(reader.result||'').split(',').pop()||''});reader.readAsDataURL(file)});
-      function updateChoice(){const type=document.querySelector('input[name="completionType"]:checked')?.value||'PRODOTTO';fileBlock.hidden=type==='SERVIZIO';confirmationLabel.textContent=type==='PRODOTTO'?'Confermo la ricezione e il corretto funzionamento del prodotto.':'Confermo l’avvenuto espletamento/attivazione del servizio.'}
+      function updateChoice(){const type=document.querySelector('input[name="completionType"]:checked')?.value||'PRODOTTO';fileBlock.hidden=type==='SERVIZIO';partialBlock.hidden=type!=='PRODOTTO';confirmationLabel.textContent=type==='PRODOTTO'?(partialBox.checked?'Confermo di aver ricevuto solo una parte della fornitura.':'Confermo il corretto funzionamento del prodotto.'):'Confermo l’avvenuto espletamento/attivazione del servizio.'}
+      partialBox.addEventListener('change',updateChoice);
       async function start(){
         if(!token){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show('Il collegamento è incompleto: aprilo direttamente dall’email ricevuta.','error');return}
         try{
           const data=await server('getUploadPageData',{token});
-          summary.innerHTML=`<strong>RDO ${esc(data.rdo||'—')} · CIG ${esc(data.cig||'—')}</strong><span>${esc(data.subject||'Fornitura/servizio')}${data.supplier?' · '+esc(data.supplier):''}</span>`;
+          summary.innerHTML=`<strong>RDO ${esc(data.rdo||'—')} · CIG ${esc(data.cig||'—')}${data.cup?' · CUP '+esc(data.cup):''}</strong><span>${esc(data.subject||'Fornitura/servizio')}${data.supplier?' · '+esc(data.supplier):''}</span>`;
           if(data.delivered){show('L’adempimento risulta già registrato.','success');return}
           form.hidden=false;updateChoice();
+          if(data.partialCount)show('Hai già caricato '+(data.partialCount===1?'un DDT parziale':data.partialCount+' DDT parziali')+'. Quando la fornitura è completa, carica il DDT finale senza spuntare «parziale».','');
         }catch(error){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show(error.message,'error')}
       }
       document.querySelectorAll('input[name="completionType"]').forEach(input=>input.addEventListener('change',updateChoice));
       form.addEventListener('submit',async event=>{
         event.preventDefault();
-        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',file=chosenFile,confirmed=document.querySelector('#confirmed').checked;
-        if(completionType==='PRODOTTO'&&!file){show('Per il prodotto è necessario selezionare il file DDT.','error');return}
+        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',partial=completionType==='PRODOTTO'&&partialBox.checked,confirmed=document.querySelector('#confirmed').checked;
+        if(completionType==='PRODOTTO'&&!chosenFiles.length){show('Per il prodotto è necessario caricare almeno un file DDT.','error');return}
         if(!confirmed){show('Spunta la conferma prima di procedere.','error');return}
         button.disabled=true;button.textContent='Registrazione in corso…';
         try{
-          await server('uploadDdtFromLink',{token,completionType,confirmed:true,file:file?await asPayload(file):null,note:document.querySelector('#note').value.trim()});
+          const files=await Promise.all(chosenFiles.map(asPayload));
+          await server('uploadDdtFromLink',{token,completionType,confirmed:true,partial,file:null,files,note:document.querySelector('#note').value.trim()});
+          if(partial){
+            chosenFiles=[];renderFiles();partialBox.checked=false;document.querySelector('#confirmed').checked=false;document.querySelector('#note').value='';updateChoice();
+            button.disabled=false;button.textContent='Registra adempimento';
+            show('DDT parziale registrato. Quando riceverai il resto della fornitura, apri di nuovo questo link e carica il DDT finale.','success');return;
+          }
           form.hidden=true;
           show(completionType==='PRODOTTO'?'DDT ricevuto e corretto funzionamento confermato. I promemoria sono stati sospesi.':'Espletamento/attivazione del servizio confermato. I promemoria sono stati sospesi.','success');
         }catch(error){show(error.message,'error');button.disabled=false;button.textContent='Registra adempimento'}
