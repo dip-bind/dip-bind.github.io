@@ -12,10 +12,13 @@
     .shell{position:relative;width:min(620px,100%);overflow:hidden;padding:30px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(29,50,84,.97),rgba(12,25,46,.99));box-shadow:0 30px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.09)}
     .seal{position:absolute;right:-65px;bottom:-70px;width:280px;height:280px;border:12px double rgba(97,156,216,.07);border-radius:50%;pointer-events:none}.seal:after{content:"BiND";position:absolute;inset:0;display:grid;place-items:center;color:rgba(97,156,216,.08);font:700 52px Georgia,serif}
     .eyebrow{color:#77b9fb;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{margin:7px 0 9px;font-size:30px;font-weight:500}p{margin:0;color:var(--muted);line-height:1.55}.summary{margin:22px 0;padding:16px;border:1px solid var(--line);border-radius:13px;background:rgba(4,12,25,.35)}.summary strong,.summary span{display:block}.summary span{margin-top:5px;color:var(--muted);font-size:14px}
-    label{display:block;margin-top:16px;color:#cad9eb;font-size:14px;font-weight:700}input[type=file],textarea{width:100%;margin-top:7px;padding:12px;color:var(--ink);background:#0b172a;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:100px;resize:vertical}.choice{display:flex;gap:10px;align-items:flex-start;padding:14px;margin-top:11px;border:1px solid var(--line);border-radius:12px;background:rgba(7,19,36,.58);cursor:pointer}.choice:has(input:checked){border-color:#4fa3f3;box-shadow:0 0 0 2px rgba(47,139,232,.16)}.choice input{margin-top:3px}.choice span{font-weight:600;line-height:1.45}.confirm{display:flex;gap:10px;align-items:flex-start}.confirm input{margin-top:3px}
+    .notice{position:relative;margin:0 0 18px;padding:14px 16px;border:1px solid rgba(255,191,122,.55);border-radius:12px;background:rgba(255,191,122,.09);color:#f4dcc0;font-size:13.5px;line-height:1.5;text-align:justify}.notice strong{display:block;margin-bottom:6px;color:#ffbf7a;font-size:14px;letter-spacing:.04em;text-transform:uppercase}.notice p{margin:0 0 7px;color:inherit}.notice p:last-child{margin:0;font-weight:700}
+    label{display:block;margin-top:16px;color:#cad9eb;font-size:14px;font-weight:700}input[type=file],textarea,.field input,.field select{width:100%;margin-top:7px;padding:12px;color:var(--ink);background:#0b172a;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:100px;resize:vertical}.choice{display:flex;gap:10px;align-items:flex-start;padding:14px;margin-top:11px;border:1px solid var(--line);border-radius:12px;background:rgba(7,19,36,.58);cursor:pointer}.choice:has(input:checked){border-color:#4fa3f3;box-shadow:0 0 0 2px rgba(47,139,232,.16)}.choice input{margin-top:3px}.choice span{font-weight:600;line-height:1.45}.choice small{display:block;margin-top:3px;color:var(--muted);font-weight:400}.confirm{display:flex;gap:10px;align-items:flex-start}.confirm input{margin-top:3px}
     button{width:100%;margin-top:19px;padding:13px;border:1px solid rgba(103,213,150,.45);border-radius:11px;color:white;background:linear-gradient(180deg,#34b96f,#258c55);box-shadow:0 10px 22px rgba(25,121,70,.24);font-weight:800;font-size:15px;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.message{margin-top:17px;padding:12px;border-radius:10px;background:rgba(47,139,232,.12);color:#cfe7ff;line-height:1.5}.message.error{background:rgba(239,108,117,.12);color:#ffd3d6}.message.success{background:rgba(53,182,111,.13);color:#c9f5dc}
     .file-block{margin-top:16px}.file-label{display:block;color:#cad9eb;font-size:14px;font-weight:700}.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.pick-btn{display:flex;align-items:center;justify-content:center;margin:0;padding:13px;border:1px solid #4fa3f3;border-radius:10px;background:rgba(47,139,232,.14);color:#eef6ff;font-size:15px;font-weight:700;cursor:pointer}.pick-btn:hover{background:rgba(47,139,232,.24)}.file-name{display:block;margin-top:8px;color:var(--muted);font-size:13px;word-break:break-all}
     .file-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.file-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:#cad9eb}.file-list li.empty{border:0;padding:0;color:var(--muted)}.file-list span{min-width:0;overflow-wrap:anywhere}.remove-file{width:auto;margin:0;padding:6px 10px;border:1px solid rgba(239,108,117,.5);border-radius:8px;background:rgba(239,108,117,.12);box-shadow:none;font-size:12px;color:#ffd3d6}.confirm.partial{color:#ffbf7a}
+    .lost{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:12px;background:rgba(4,12,25,.35)}.lost h2{margin:0 0 6px;font-size:16px}.lost .steps{margin:0 0 4px;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.field{margin-top:12px}.field label{margin:0}.field input:read-only{color:var(--muted)}.secondary{border-color:#4fa3f3;background:rgba(47,139,232,.18);box-shadow:none}
+    @media (max-width:520px){.shell{padding:22px}.grid{grid-template-columns:1fr}}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -26,16 +29,45 @@
     <h1>Completa la procedura</h1>
     <p>Scegli l’adempimento relativo alla procedura indicata. Il collegamento è personale, temporaneo e utilizzabile una sola volta.</p>
     <section id="summary" class="summary"><strong>Verifica del collegamento…</strong></section>
+    <section class="notice" role="note" aria-label="Attenzione">
+      <strong>Attenzione</strong>
+      <p>Le informazioni inserite nel presente applicativo sono rese sotto la responsabilità del dichiarante, ai sensi degli artt. 46 e 47 del D.P.R. 28 dicembre 2000, n. 445, ove applicabili.</p>
+      <p>Ai sensi dell’art. 71 del D.P.R. n. 445/2000, le dichiarazioni rese potranno essere sottoposte a verifica, anche a campione, mediante riscontro con i dati in possesso degli Uffici dell’Ateneo e delle Amministrazioni o degli Enti competenti.</p>
+      <p>Qualora dalle verifiche emergano dichiarazioni non rispondenti al vero, troveranno applicazione, ove ne ricorrano i presupposti, le disposizioni previste dall’art. 75 del D.P.R. n. 445/2000, in materia di decadenza dai benefici eventualmente conseguiti, nonché dall’art. 76 del medesimo D.P.R., relativo alle conseguenze penali derivanti da dichiarazioni mendaci, formazione o uso di atti falsi.</p>
+      <p>Eventuali dichiarazioni non rispondenti al vero, accertate in sede di verifica, comporteranno l’applicazione delle conseguenze previste dagli artt. 75 e 76 del D.P.R. 445/2000, ove applicabili.</p>
+      <p>Prima dell’invio, si invita pertanto a verificare con attenzione la correttezza e la veridicità dei dati inseriti.</p>
+    </section>
     <form id="form" hidden>
       <label class="choice"><input type="radio" name="completionType" value="PRODOTTO" checked><span>Carica DDT e conferma corretto funzionamento del prodotto</span></label>
       <label class="choice"><input type="radio" name="completionType" value="SERVIZIO"><span>Conferma espletamento/attivazione servizio</span></label>
-      <div id="fileBlock" class="file-block"><span class="file-label">Documento DDT</span>
+      <label class="choice"><input type="radio" name="completionType" value="SMARRITO"><span>Documento di consegna smarrito<small>Compila la dichiarazione di avvenuta consegna, scaricala, firmala e caricala qui.</small></span></label>
+      <div id="lostBlock" class="lost" hidden>
+        <h2>Dichiarazione di avvenuta consegna</h2>
+        <ol class="steps"><li>Compila i dati e scarica il PDF.</li><li>Firmalo digitalmente oppure stampalo e firmalo a mano.</li><li>Carica qui sotto il documento firmato (PDF, .p7m, foto o scansione).</li></ol>
+        <div class="grid">
+          <div class="field"><label for="lostCig">CIG</label><input id="lostCig" readonly></div>
+          <div class="field"><label for="lostFascicolo">N. fascicolo</label><input id="lostFascicolo" maxlength="80" placeholder="Facoltativo"></div>
+        </div>
+        <div class="field"><label for="lostTitle">Titolo della fornitura</label><input id="lostTitle" maxlength="300"></div>
+        <div class="field"><label for="lostSupplier">Ditta</label><input id="lostSupplier" maxlength="200"></div>
+        <div class="grid">
+          <div class="field"><label for="lostBolla">N. bolla di accompagnamento</label><input id="lostBolla" maxlength="60"></div>
+          <div class="field"><label for="lostBollaDate">Data della bolla</label><input id="lostBollaDate" type="date"></div>
+        </div>
+        <div class="field"><label for="lostStatus">Il materiale è</label><select id="lostStatus"><option value="">Scegli…</option><option value="regolarmente pervenuto">regolarmente pervenuto</option><option value="stato correttamente consegnato ed installato">stato correttamente consegnato ed installato</option></select></div>
+        <div class="grid">
+          <div class="field"><label for="lostPlace">Luogo</label><input id="lostPlace" maxlength="80" value="Palermo"></div>
+          <div class="field"><label for="lostDate">Data</label><input id="lostDate" type="date"></div>
+        </div>
+        <button id="lostDownload" class="secondary" type="button">Scarica la dichiarazione da firmare (PDF)</button>
+      </div>
+      <div id="fileBlock" class="file-block"><span class="file-label" id="fileLabel">Documento DDT</span>
         <div class="pick">
           <label class="pick-btn" for="camera">Scatta foto</label>
           <label class="pick-btn" for="file">Sfoglia</label>
         </div>
         <input id="camera" type="file" accept="image/*" capture="environment" hidden>
-        <input id="file" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx" hidden>
+        <input id="file" type="file" multiple accept=".pdf,.p7m,.png,.jpg,.jpeg,.tif,.tiff,.doc,.docx" hidden>
         <ul id="fileList" class="file-list"><li class="empty">Nessun file selezionato</li></ul>
       </div>
       <label class="confirm partial" id="partialBlock"><input id="partial" type="checkbox"><span>La fornitura è incompleta: questo DDT è parziale</span></label>
@@ -53,13 +85,6 @@
       const SERVICE_URL='https://script.google.com/macros/s/AKfycbz2cA-oDDs0FfdR8_7je2kjKfo0Hp48Ke8kyzY2hXooGKbBjvKk_MTyA3a7ACu_bCqBxQ/exec';
       const params=new URLSearchParams(location.search);
       const token=String(params.get('c')||params.get('upload')||'').trim();
-      const summary=document.querySelector('#summary'),form=document.querySelector('#form'),message=document.querySelector('#message'),button=document.querySelector('#submit'),fileBlock=document.querySelector('#fileBlock'),confirmationLabel=document.querySelector('#confirmationLabel');
-      const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-      const show=(text,type='')=>{message.textContent=text;message.className='message '+type;message.hidden=false};
-      let chosenFiles=[];const fileList=document.querySelector('#fileList'),partialBox=document.querySelector('#partial'),partialBlock=document.querySelector('#partialBlock');
-      const renderFiles=()=>{fileList.innerHTML=chosenFiles.length?chosenFiles.map((f,i)=>`<li><span>${esc(f.name)} · ${Math.max(1,Math.round(f.size/1024))} KB</span><button type="button" class="remove-file" data-index="${i}">Togli</button></li>`).join(''):'<li class="empty">Nessun file selezionato</li>'};
-      fileList.addEventListener('click',event=>{const b=event.target.closest('.remove-file');if(!b)return;chosenFiles.splice(Number(b.dataset.index),1);renderFiles()});
-      ['#camera','#file'].forEach(sel=>document.querySelector(sel).addEventListener('change',event=>{chosenFiles=chosenFiles.concat([...event.target.files]).slice(0,10);event.target.value='';renderFiles()}));
       // Corpo text/plain: richiesta "semplice", nessun preflight CORS e nessun cookie Google inviato.
       async function server(action,payload){
         let response;
@@ -70,38 +95,68 @@
         if(!result||!result.ok)throw new Error(result&&result.error||'Operazione non riuscita.');
         return result.data;
       }
+      /*SHARED-START*/
+      const $=sel=>document.querySelector(sel);
+      const summary=$('#summary'),form=$('#form'),message=$('#message'),button=$('#submit'),fileBlock=$('#fileBlock'),confirmationLabel=$('#confirmationLabel'),lostBlock=$('#lostBlock'),fileLabel=$('#fileLabel');
+      const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const show=(text,type='')=>{message.textContent=text;message.className='message '+type;message.hidden=false};
+      let chosenFiles=[];const fileList=$('#fileList'),partialBox=$('#partial'),partialBlock=$('#partialBlock');
+      const renderFiles=()=>{fileList.innerHTML=chosenFiles.length?chosenFiles.map((f,i)=>`<li><span>${esc(f.name)} · ${Math.max(1,Math.round(f.size/1024))} KB</span><button type="button" class="remove-file" data-index="${i}">Togli</button></li>`).join(''):'<li class="empty">Nessun file selezionato</li>'};
+      fileList.addEventListener('click',event=>{const b=event.target.closest('.remove-file');if(!b)return;chosenFiles.splice(Number(b.dataset.index),1);renderFiles()});
+      ['#camera','#file'].forEach(sel=>$(sel).addEventListener('change',event=>{chosenFiles=chosenFiles.concat([...event.target.files]).slice(0,10);event.target.value='';renderFiles()}));
       const asPayload=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('Impossibile leggere il file.'));reader.onload=()=>resolve({name:file.name,mimeType:file.type||'application/octet-stream',base64:String(reader.result||'').split(',').pop()||''});reader.readAsDataURL(file)});
-      function updateChoice(){const type=document.querySelector('input[name="completionType"]:checked')?.value||'PRODOTTO';fileBlock.hidden=type==='SERVIZIO';partialBlock.hidden=type!=='PRODOTTO';confirmationLabel.textContent=type==='PRODOTTO'?(partialBox.checked?'Confermo di aver ricevuto solo una parte della fornitura.':'Confermo il corretto funzionamento del prodotto.'):'Confermo l’avvenuto espletamento/attivazione del servizio.'}
+      const currentType=()=>document.querySelector('input[name="completionType"]:checked')?.value||'PRODOTTO';
+      function updateChoice(){
+        const type=currentType();
+        fileBlock.hidden=type==='SERVIZIO';partialBlock.hidden=type!=='PRODOTTO';lostBlock.hidden=type!=='SMARRITO';
+        fileLabel.textContent=type==='SMARRITO'?'Dichiarazione firmata':'Documento DDT';
+        confirmationLabel.textContent=type==='PRODOTTO'?(partialBox.checked?'Confermo di aver ricevuto solo una parte della fornitura.':'Confermo il corretto funzionamento del prodotto.'):(type==='SMARRITO'?'Confermo quanto dichiarato nella dichiarazione di avvenuta consegna firmata.':'Confermo l’avvenuto espletamento/attivazione del servizio.');
+      }
       partialBox.addEventListener('change',updateChoice);
+      document.querySelectorAll('input[name="completionType"]').forEach(input=>input.addEventListener('change',updateChoice));
+      const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+      function fillLost(data){$('#lostCig').value=data.cig||'';$('#lostTitle').value=data.subject||'';$('#lostSupplier').value=data.supplier||'';$('#lostDate').value=today()}
+      function saveBase64(file){const bytes=atob(file.base64),array=new Uint8Array(bytes.length);for(let i=0;i<bytes.length;i++)array[i]=bytes.charCodeAt(i);const url=URL.createObjectURL(new Blob([array],{type:file.mimeType||'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=file.name||'dichiarazione.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000)}
+      $('#lostDownload').addEventListener('click',async event=>{
+        const b=event.currentTarget,fields={title:$('#lostTitle').value.trim(),fascicolo:$('#lostFascicolo').value.trim(),supplier:$('#lostSupplier').value.trim(),bolla:$('#lostBolla').value.trim(),bollaDate:$('#lostBollaDate').value,status:$('#lostStatus').value,place:$('#lostPlace').value.trim(),date:$('#lostDate').value};
+        if(!fields.bolla||!fields.bollaDate){show('Inserisci numero e data della bolla di accompagnamento.','error');return}
+        if(!fields.status){show('Scegli se il materiale è regolarmente pervenuto oppure consegnato ed installato.','error');return}
+        b.disabled=true;const label=b.textContent;b.textContent='Preparazione del PDF…';
+        try{const file=await server('getLostDeclarationPdf',{token,fields});saveBase64(file);show('Dichiarazione scaricata. Firmala e caricala qui sotto come «Dichiarazione firmata».','success')}
+        catch(error){show(error.message,'error')}
+        finally{b.disabled=false;b.textContent=label}
+      });
       async function start(){
         if(!token){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show('Il collegamento è incompleto: aprilo direttamente dall’email ricevuta.','error');return}
         try{
           const data=await server('getUploadPageData',{token});
           summary.innerHTML=`<strong>RDO ${esc(data.rdo||'—')} · CIG ${esc(data.cig||'—')}${data.cup?' · CUP '+esc(data.cup):''}</strong><span>${esc(data.subject||'Fornitura/servizio')}${data.supplier?' · '+esc(data.supplier):''}</span>`;
+          if(data.closedByOther){show('La procedura risulta già completata: la conferma è stata registrata da un altro destinatario. Non devi fare altro.','success');return}
           if(data.delivered){show('L’adempimento risulta già registrato.','success');return}
-          form.hidden=false;updateChoice();
+          fillLost(data);form.hidden=false;updateChoice();
           if(data.partialCount)show('Hai già caricato '+(data.partialCount===1?'un DDT parziale':data.partialCount+' DDT parziali')+'. Quando la fornitura è completa, carica il DDT finale senza spuntare «parziale».','');
         }catch(error){summary.innerHTML='<strong>Collegamento non disponibile</strong>';show(error.message,'error')}
       }
-      document.querySelectorAll('input[name="completionType"]').forEach(input=>input.addEventListener('change',updateChoice));
       form.addEventListener('submit',async event=>{
         event.preventDefault();
-        const completionType=document.querySelector('input[name="completionType"]:checked')?.value||'',partial=completionType==='PRODOTTO'&&partialBox.checked,confirmed=document.querySelector('#confirmed').checked;
+        const completionType=currentType(),partial=completionType==='PRODOTTO'&&partialBox.checked,confirmed=$('#confirmed').checked;
         if(completionType==='PRODOTTO'&&!chosenFiles.length){show('Per il prodotto è necessario caricare almeno un file DDT.','error');return}
+        if(completionType==='SMARRITO'&&!chosenFiles.length){show('Carica la dichiarazione di avvenuta consegna firmata.','error');return}
         if(!confirmed){show('Spunta la conferma prima di procedere.','error');return}
         button.disabled=true;button.textContent='Registrazione in corso…';
         try{
           const files=await Promise.all(chosenFiles.map(asPayload));
-          await server('uploadDdtFromLink',{token,completionType,confirmed:true,partial,file:null,files,note:document.querySelector('#note').value.trim()});
+          await server('uploadDdtFromLink',{token,completionType,confirmed:true,partial,file:null,files,note:$('#note').value.trim()});
           if(partial){
-            chosenFiles=[];renderFiles();partialBox.checked=false;document.querySelector('#confirmed').checked=false;document.querySelector('#note').value='';updateChoice();
+            chosenFiles=[];renderFiles();partialBox.checked=false;$('#confirmed').checked=false;$('#note').value='';updateChoice();
             button.disabled=false;button.textContent='Registra adempimento';
             show('DDT parziale registrato. Quando riceverai il resto della fornitura, apri di nuovo questo link e carica il DDT finale.','success');return;
           }
           form.hidden=true;
-          show(completionType==='PRODOTTO'?'DDT ricevuto e corretto funzionamento confermato. I promemoria sono stati sospesi.':'Espletamento/attivazione del servizio confermato. I promemoria sono stati sospesi.','success');
+          show(completionType==='SERVIZIO'?'Espletamento/attivazione del servizio confermato. I promemoria sono stati sospesi.':(completionType==='SMARRITO'?'Dichiarazione di avvenuta consegna ricevuta. I promemoria sono stati sospesi.':'DDT ricevuto e corretto funzionamento confermato. I promemoria sono stati sospesi.'),'success');
         }catch(error){show(error.message,'error');button.disabled=false;button.textContent='Registra adempimento'}
       });
+      /*SHARED-END*/
       start();
     })();
   </script>
